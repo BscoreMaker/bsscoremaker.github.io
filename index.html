@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baka Score Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #555;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+        input[type="number"], input[type="radio"] {
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Baka Score Calculator</h1>
+        <h2>Calculer votre score pur ou pondéré</h2>
+
+        <!-- Pur Baka Score Form -->
+        <div id="pur-section">
+            <h3>Calculer le Baka Score Pur</h3>
+            <label for="rp-score">Entrez votre Rice Purity Score (0-100):</label>
+            <input type="number" id="rp-score" min="0" max="100" placeholder="Ex: 50">
+            <button onclick="calculatePurBS()">Calculer Baka Score Pur</button>
+            <div id="pur-result" class="result"></div>
+        </div>
+
+        <!-- Pondéré Baka Score Form -->
+        <div id="pond-section">
+            <h3>Questionnaire pour le Baka Score Pondéré</h3>
+            <form id="baka-form">
+                <!-- Questions -->
+                <label>Saveur préférée de chocolat:</label>
+                <input type="radio" name="chocolat" value="-5"> Blanc
+                <input type="radio" name="chocolat" value="2"> Lait
+                <input type="radio" name="chocolat" value="3"> Noir
+
+                <label>Ton nom commence-t-il par une voyelle?</label>
+                <input type="radio" name="voyelle" value="-2"> Oui
+                <input type="radio" name="voyelle" value="2"> Non
+
+                <label>Es-tu plus:</label>
+                <input type="radio" name="gout" value="1"> Sucré
+                <input type="radio" name="gout" value="10"> Sucré et salé
+                <input type="radio" name="gout" value="2"> Salé
+
+                <label>Parles-tu allemand?</label>
+                <input type="radio" name="allemand" value="20"> Oui
+                <input type="radio" name="allemand" value="-7"> Non
+
+                <label>Bois-tu de l’eau avec une paille?</label>
+                <input type="radio" name="paille" value="15"> Oui
+                <input type="radio" name="paille" value="1"> Non
+
+                <label>As-tu l’oreille absolue?</label>
+                <input type="radio" name="oreille" value="10"> Oui
+                <input type="radio" name="oreille" value="1"> Non
+
+                <label>Es-tu souverainiste?</label>
+                <input type="radio" name="souverainiste" value="25"> Oui
+                <input type="radio" name="souverainiste" value="-12"> Non
+
+                <label>Aimes-tu le lait?</label>
+                <input type="radio" name="lait" value="5"> Oui
+                <input type="radio" name="lait" value="3"> Non
+
+                <label>Crois-tu aux extraterrestres?</label>
+                <input type="radio" name="extraterrestres" value="4"> Oui
+                <input type="radio" name="extraterrestres" value="-3"> Non
+
+                <label>GIF ou JIF?</label>
+                <input type="radio" name="gif" value="16"> GIF
+                <input type="radio" name="gif" value="-10"> JIF
+
+                <!-- Rice Purity Score -->
+                <label for="rp-bsp">Entrez votre Rice Purity Score (0-100):</label>
+                <input type="number" id="rp-bsp" min="0" max="100" placeholder="Ex: 50">
+
+                <button type="button" onclick="calculatePondBS()">Calculer Baka Score Pondéré</button>
+            </form>
+            <div id="pond-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate Pur Baka Score
+        function calculatePurBS() {
+            const rpScore = parseFloat(document.getElementById("rp-score").value);
+
+            if (isNaN(rpScore) || rpScore < 0 || rpScore > 100) {
+                document.getElementById("pur-result").textContent = "Veuillez entrer un Rice Purity Score valide (0-100).";
+                return;
+            }
+
+            const purBS = 17 - ((2.89 * rpScore) / 17);
+            document.getElementById("pur-result").textContent = `Ton Baka Score Pur est de ${purBS.toFixed(2)}.`;
+        }
+
+        // Calculate Pondéré Baka Score
+        function calculatePondBS() {
+            const form = document.getElementById("baka-form");
+            const rpBSP = parseFloat(document.getElementById("rp-bsp").value);
+
+            if (isNaN(rpBSP) || rpBSP < 0 || rpBSP > 100) {
+                document.getElementById("pond-result").textContent = "Veuillez entrer un Rice Purity Score valide (0-100).";
+                return;
+            }
+
+            let bsp = 0;
+            const inputs = form.querySelectorAll("input[type='radio']:checked");
+
+            inputs.forEach(input => {
+                bsp += parseFloat(input.value);
+            });
+
+            bsp = Math.max(0, Math.min(100, bsp)); // Clamp BSP between 0 and 100
+            const bsPondere = 17 - ((2.89 * bsp) / 17);
+            document.getElementById("pond-result").textContent = `Ton Baka Score Pondéré est de ${bsPondere.toFixed(2)}.`;
+        }
+    </script>
+</body>
+</html>
